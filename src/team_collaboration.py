@@ -34,5 +34,5 @@ def display_team_roster():
     print("=" * 60 + "\n")
 
 
-if __name__ == "__master__":
+if __name__ == "__main__":
     display_team_roster()
