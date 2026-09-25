@@ -44,7 +44,7 @@ TEAM_REGISTRY = {
             ),
         },
         {
-            "name": "Jose Carlos Verea Ovando",
+            "name": "Jose Carlos Vera Ovando",
             "student_id": "00473456",
             "role": "Data Engineer",
             "assigned_reviewer": "Carlos Emilio Mejia Martinez",
@@ -69,7 +69,7 @@ TEAM_REGISTRY = {
             "name": "Carlos Emilio Mejia Martinez",
             "student_id": "00473455",
             "role": "Data Scientist",
-            "assigned_reviewer": "Jose Carlos Verea Ovando",
+            "assigned_reviewer": "Jose Carlos Vera Ovando",
             "git_feature_branch": "feature/activity-10-carlos-emilio",
             "preferred_ai_assistant": "Bard AI",
             "timestamp": datetime.datetime.now().strftime(
