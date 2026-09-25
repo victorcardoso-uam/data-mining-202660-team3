@@ -18,7 +18,34 @@ TEAM_REGISTRY = {
             "git_feature_branch": "feature/activity-10-victoria-morales",
             "preferred_ai_assistant": "Perplexity AI",
             "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        }
+        },
+        {
+            "name": "Jose Carlos Verea Ovando",
+            "student_id": "00473456",
+            "role": "Data Engineer",
+            "assigned_reviewer": "Carlos Emilio Mejia Martinez",
+            "git_feature_branch": "feature/activity-10-jose",
+            "preferred_ai_assistant": "ChatGPT",
+            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        },
+        {
+            "name": "Jimena Escalante Cámara",
+            "student_id": "00473431",
+            "role": "Data Analyst",
+            "assigned_reviewer": "Victoria Morales Cabrera",
+            "git_feature_branch": "feature/activity-10-jimena",
+            "preferred_ai_assistant": "Claude AI",
+            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        },
+        {
+            "name": "Carlos Emilio Mejia Martinez",
+            "student_id": "00473455",
+            "role": "Data Scientist",
+            "assigned_reviewer": "Jose Carlos Verea Ovando",
+            "git_feature_branch": "feature/activity-10-carlos-emilio",
+            "preferred_ai_assistant": "Bard AI",
+            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        },
     ],
 }
 
