@@ -1,4 +1,7 @@
-"""Team collaboration registry for Activity 10."""
+"""
+Team Collaboration & Engineering Contribution Registry
+Data Mining & Modern AI Systems (IIND4417) — Session 13
+"""
 
 import datetime
 
@@ -18,12 +21,67 @@ TEAM_REGISTRY = {
                 "%Y-%m-%d %H:%M:%S"
             ),
         },
+        {
+            "name": "Rodrigo Meouchi",
+            "student_id": "00480093",
+            "role": "Data Quality Auditor",
+            "assigned_reviewer": "EDUARDO GALLEGOS BOLAÑOS CACHO",
+            "git_feature_branch": "feature/activity-10-rodrigo-meouchi",
+            "preferred_ai_assistant": "Claude",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
+        {
+            "name": "Victoria Morales Cabrera",
+            "student_id": "00473430",
+            "role": "Data Quality Auditor",
+            "assigned_reviewer": "Jimena Escalante Cámara",
+            "git_feature_branch": "feature/activity-10-victoria-morales",
+            "preferred_ai_assistant": "Perplexity AI",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
+        {
+            "name": "Jose Carlos Verea Ovando",
+            "student_id": "00473456",
+            "role": "Data Engineer",
+            "assigned_reviewer": "Carlos Emilio Mejia Martinez",
+            "git_feature_branch": "feature/activity-10-jose",
+            "preferred_ai_assistant": "ChatGPT",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
+        {
+            "name": "Jimena Escalante Cámara",
+            "student_id": "00473431",
+            "role": "Data Analyst",
+            "assigned_reviewer": "Victoria Morales Cabrera",
+            "git_feature_branch": "feature/activity-10-jimena",
+            "preferred_ai_assistant": "Claude AI",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
+        {
+            "name": "Carlos Emilio Mejia Martinez",
+            "student_id": "00473455",
+            "role": "Data Scientist",
+            "assigned_reviewer": "Jose Carlos Verea Ovando",
+            "git_feature_branch": "feature/activity-10-carlos-emilio",
+            "preferred_ai_assistant": "Bard AI",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
     ],
 }
 
 
 def display_team_roster():
-    """Display each registered member."""
+    """Display all registered team members."""
     print(f"\n{'=' * 20} {TEAM_REGISTRY['cohort']} ACTIVE ROSTER {'=' * 20}")
     for member in TEAM_REGISTRY["members"]:
         print(
