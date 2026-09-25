@@ -11,13 +11,37 @@ TEAM_REGISTRY = {
     "repository": "data-mining-202660-team3",
     "members": [
         {
+            "name": "EDUARDO GALLEGOS BOLAÑOS CACHO",
+            "student_id": "00474516",
+            "role": "AI DATA ENGINEER",
+            "assigned_reviewer": "JIMENA ESCALANTE CÁMARA",
+            "git_feature_branch": "feature/activity-10-eduardo-gallegos",
+            "preferred_ai_assistant": "Codex",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
+        {
+            "name": "Rodrigo Meouchi",
+            "student_id": "00480093",
+            "role": "Data Quality Auditor",
+            "assigned_reviewer": "EDUARDO GALLEGOS BOLAÑOS CACHO",
+            "git_feature_branch": "feature/activity-10-rodrigo-meouchi",
+            "preferred_ai_assistant": "Claude",
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+        },
+        {
             "name": "Victoria Morales Cabrera",
-            "student_id": "473430",
+            "student_id": "00473430",
             "role": "Data Quality Auditor",
             "assigned_reviewer": "Jimena Escalante Cámara",
             "git_feature_branch": "feature/activity-10-victoria-morales",
             "preferred_ai_assistant": "Perplexity AI",
-            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
         },
         {
             "name": "Jose Carlos Verea Ovando",
@@ -26,7 +50,9 @@ TEAM_REGISTRY = {
             "assigned_reviewer": "Carlos Emilio Mejia Martinez",
             "git_feature_branch": "feature/activity-10-jose",
             "preferred_ai_assistant": "ChatGPT",
-            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
         },
         {
             "name": "Jimena Escalante Cámara",
@@ -35,7 +61,9 @@ TEAM_REGISTRY = {
             "assigned_reviewer": "Victoria Morales Cabrera",
             "git_feature_branch": "feature/activity-10-jimena",
             "preferred_ai_assistant": "Claude AI",
-            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
         },
         {
             "name": "Carlos Emilio Mejia Martinez",
@@ -44,23 +72,23 @@ TEAM_REGISTRY = {
             "assigned_reviewer": "Jose Carlos Verea Ovando",
             "git_feature_branch": "feature/activity-10-carlos-emilio",
             "preferred_ai_assistant": "Bard AI",
-            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "timestamp": datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
         },
     ],
 }
 
 
 def display_team_roster():
-    """Display the current registered team members."""
+    """Display all registered team members."""
     print(f"\n{'=' * 20} {TEAM_REGISTRY['cohort']} ACTIVE ROSTER {'=' * 20}")
-
     for member in TEAM_REGISTRY["members"]:
         print(
             f"* {member['name']} ({member['student_id']}) | "
             f"Role: {member['role']} | "
             f"Branch: {member['git_feature_branch']}"
         )
-
     print("=" * 60 + "\n")
 
 
