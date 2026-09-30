@@ -56,7 +56,7 @@ TEAM_REGISTRY = {
         },
         {
             "name": "Jimena Escalante Cámara",
-            "student_id": "00473431",
+            "student_id": "00470871",
             "role": "Data Analyst",
             "assigned_reviewer": "Victoria Morales Cabrera",
             "git_feature_branch": "feature/activity-10-jimena",
@@ -67,7 +67,7 @@ TEAM_REGISTRY = {
         },
         {
             "name": "Carlos Emilio Mejia Martinez",
-            "student_id": "00473455",
+            "student_id": "00477485",
             "role": "Data Scientist",
             "assigned_reviewer": "Jose Carlos Verea Ovando",
             "git_feature_branch": "feature/activity-10-carlos-emilio",
