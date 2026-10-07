@@ -1,0 +1,38 @@
+ACTIVIDAD 13 - EQUIPO 3 - VICTORIA MORALES
+
+Total de registros: 700
+Variables predictoras: ['cell_temperature_c', 'internal_resistance_mohm', 'charge_cycles_count', 'discharge_current_amps']
+Registros de entrenamiento: 525
+Registros de prueba: 175
+
+Clases en entrenamiento:
+thermal_runaway_risk
+0    382
+1    143
+Name: count, dtype: int64
+
+Clases en prueba:
+thermal_runaway_risk
+0    127
+1     48
+Name: count, dtype: int64
+
+RESULTADOS DEL EXPERIMENTO
+   alpha  hojas  profundidad error_train error_test  costo_total
+0.001000     59           12       0.00%     20.57%     0.264714
+0.015000      7            4       8.00%      9.14%     0.196429
+0.080000      1            0      27.24%     27.43%     0.354286
+
+ALPHA(S) CON MENOR ERROR DE PRUEBA:
+[0.015]
+
+ALPHA(S) CON MENOR COSTO TOTAL:
+[0.015]
+
+COMPROBACIÓN ADICIONAL: ALPHA = 0.000
+Hojas: 59
+Profundidad: 12
+Error de entrenamiento: 0.00%
+Error de prueba: 20.57%
+
+Tabla guardada en: reports/activity_13_victoria_morales/pruning_results.csv
