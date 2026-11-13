@@ -1,0 +1,6 @@
+Model,Params,Epochs,Train R2,Test R2,Adj R2,MAE,RMSE
+Model 1 (Shallow Baseline),129,2000,0.9858,0.9838,0.9831,2.1064,2.7603
+Model 2 (Single Wide Layer),513,2000,0.9954,0.993,0.9927,1.4752,1.8183
+Model 3 (Deep 2-Layer Net),2561,2000,0.9981,0.9948,0.9945,1.2104,1.5705
+Model 4 (Deep Tanh),11265,2000,0.9818,0.9691,0.9677,2.0818,3.8114
+Model 5 (Regularized Early-Stop),2561,509,0.9904,0.9903,0.9899,1.6056,2.1379
