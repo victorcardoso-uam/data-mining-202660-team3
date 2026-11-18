@@ -1,0 +1,6 @@
+,0
+shapiro_p,0.20319798336998157
+breusch_pagan_p,0.5973074347943975
+n_cooks_gt_4n,26
+max_cooks,0.030539259256490384
+best_model,OLS Linear
