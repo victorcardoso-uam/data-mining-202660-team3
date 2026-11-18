@@ -108,11 +108,11 @@ with t1:
     c1.metric("Rows", df.shape[0])
     c2.metric("Columns", df.shape[1])
     c3.metric("Missing values", int(df.isna().sum().sum()))
-    st.dataframe(df.head(20), use_container_width=True)
+    st.dataframe(df.head(20), width="stretch")
     st.subheader("Descriptive statistics")
-    st.dataframe(df.describe().T.round(3), use_container_width=True)
+    st.dataframe(df.describe().T.round(3), width="stretch")
     st.subheader("Correlation matrix")
-    st.dataframe(df.corr().round(3), use_container_width=True)
+    st.dataframe(df.corr().round(3), width="stretch")
     st.caption("Correlation of each feature with battery_cell_temp_c")
     st.bar_chart(df.corr()[TARGET].drop(TARGET))
 
@@ -120,7 +120,7 @@ with t2:
     st.subheader("Test-set metrics (80/20 split, random_state=42)")
     comp = REPORTS / "model_comparison.csv"
     if comp.exists():
-        st.dataframe(pd.read_csv(comp, index_col=0).round(4), use_container_width=True)
+        st.dataframe(pd.read_csv(comp, index_col=0).round(4), width="stretch")
         if art:
             st.success(f"Winning model (lowest test RMSE): {art['meta']['winning_model']}")
     else:
