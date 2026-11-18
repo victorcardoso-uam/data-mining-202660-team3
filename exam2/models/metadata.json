@@ -1,0 +1,58 @@
+{
+  "features": [
+    "charge_rate_c",
+    "discharge_rate_c",
+    "ambient_temp_c",
+    "coolant_flow_l_min",
+    "internal_resistance_mOhm"
+  ],
+  "target": "battery_cell_temp_c",
+  "winning_model": "OLS Linear",
+  "requires_scaler": false,
+  "log_target": false,
+  "metrics": {
+    "OLS Linear": {
+      "R2": 0.9766,
+      "Adj_R2": 0.9756,
+      "MAE": 1.2131,
+      "RMSE": 1.5659,
+      "p": 5.0
+    },
+    "OLS Log-Target": {
+      "R2": 0.9499,
+      "Adj_R2": 0.9477,
+      "MAE": 1.6605,
+      "RMSE": 2.2935,
+      "p": 5.0
+    },
+    "Polynomial (deg 2)": {
+      "R2": 0.9759,
+      "Adj_R2": 0.971,
+      "MAE": 1.2394,
+      "RMSE": 1.5899,
+      "p": 20.0
+    },
+    "MLP (64, 32)": {
+      "R2": 0.9688,
+      "Adj_R2": 0.9674,
+      "MAE": 1.3791,
+      "RMSE": 1.8106,
+      "p": 5.0
+    }
+  },
+  "mlp": {
+    "hidden_layer_sizes": [
+      64,
+      32
+    ],
+    "activation": "relu",
+    "early_stopping": true,
+    "max_iter": 1000,
+    "n_iter": 513,
+    "requires_scaler": true
+  },
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42
+  }
+}
