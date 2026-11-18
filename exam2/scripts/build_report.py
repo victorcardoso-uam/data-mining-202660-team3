@@ -156,7 +156,7 @@ s += manual(3)
 # Task 4
 s += [P("Task 4: Git and Pull Request", h1),
       P("We made small commits per task on the branch <b>exam/partial-exam-2</b>, pushed it and opened a "
-        "Pull Request to the default branch (master) for code review by a teammate before merging."),
+        "Pull Request to master for code review by a teammate before merging."),
       P(f"<b>Branch:</b> exam/partial-exam-2<br/><b>Pull Request:</b> {pr_url}"),
       P("<b>[Insert screenshot: PR review and merge]</b>"), Spacer(1, 60)]
 s += manual(4)
