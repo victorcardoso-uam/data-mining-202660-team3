@@ -61,9 +61,15 @@ if not DATA.exists():
     st.stop()
 df = load_data()
 art, missing = load_artifacts()
-if missing:
-    st.error("Missing model files in models/: " + ", ".join(missing)
+ARTIFACTS = ["best_model.joblib", "scaler.joblib", "mlp_model.joblib", "metadata.json"]
+missing_all = [f for f in ARTIFACTS if not (MODELS / f).exists()]
+if art and art["meta"]["winning_model"].startswith("MLP") and missing_all == ["mlp_model.joblib"]:
+    missing_all = []  # MLP is the winner, so it lives in best_model.joblib
+if missing_all:
+    st.error("Missing artifacts in models/: " + ", ".join(missing_all)
              + ". Run scripts/task1_regression.py and scripts/task2_ann.py first.")
+else:
+    st.success("Artifacts loaded: " + ", ".join(ARTIFACTS))
 
 P75, P90 = df[TARGET].quantile(0.75), df[TARGET].quantile(0.90)
 COOL_T, CRIT_T = round(P75), round(P90)
@@ -77,6 +83,9 @@ PRESETS = {
     "normal": {"charge_rate_c": q("charge_rate_c", .5), "discharge_rate_c": q("discharge_rate_c", .1),
                "ambient_temp_c": q("ambient_temp_c", .1), "coolant_flow_l_min": q("coolant_flow_l_min", .9),
                "internal_resistance_mOhm": q("internal_resistance_mOhm", .5)},
+    "cooling": {"charge_rate_c": q("charge_rate_c", .5), "discharge_rate_c": q("discharge_rate_c", .75),
+                "ambient_temp_c": q("ambient_temp_c", .5), "coolant_flow_l_min": q("coolant_flow_l_min", .25),
+                "internal_resistance_mOhm": q("internal_resistance_mOhm", .75)},
     "high": {"charge_rate_c": q("charge_rate_c", .5), "discharge_rate_c": q("discharge_rate_c", .95),
              "ambient_temp_c": q("ambient_temp_c", .95), "coolant_flow_l_min": q("coolant_flow_l_min", .05),
              "internal_resistance_mOhm": q("internal_resistance_mOhm", .95)},
@@ -140,9 +149,10 @@ with t3:
 
 with t4:
     st.subheader("What-if scenario")
-    b1, b2, _ = st.columns([1, 1, 3])
+    b1, b2, b3, _ = st.columns([1, 1, 1, 2])
     b1.button("Normal scenario", on_click=apply_preset, args=("normal",))
-    b2.button("High-risk scenario", on_click=apply_preset, args=("high",))
+    b2.button("Active cooling scenario", on_click=apply_preset, args=("cooling",))
+    b3.button("High-risk scenario", on_click=apply_preset, args=("high",))
     labels = {"discharge_rate_c": "Discharge rate (C) - main slider",
               "charge_rate_c": "Charge rate (C)", "ambient_temp_c": "Ambient temperature (C)",
               "coolant_flow_l_min": "Coolant flow (L/min)",

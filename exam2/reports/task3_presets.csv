@@ -1,3 +1,4 @@
 Scenario,charge_rate_c,discharge_rate_c,ambient_temp_c,coolant_flow_l_min,internal_resistance_mOhm,Predicted_C,Alert
 Normal scenario,1.99,0.84,12.7,11.0,23.3,25.72,NORMAL
+Active cooling scenario,1.99,3.08,27.55,4.6,29.6,56.65,ACTIVE COOLING
 High-risk scenario,1.99,3.74,43.6,2.6,33.7,71.34,CRITICAL
