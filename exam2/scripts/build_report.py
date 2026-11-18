@@ -34,7 +34,8 @@ if (win / "times.ttf").exists() and (win / "timesbd.ttf").exists():
     FONT, BOLD = "TNR", "TNR-Bold"
 
 body = ParagraphStyle("body", fontName=FONT, fontSize=12, leading=18, alignment=TA_JUSTIFY, spaceAfter=6)
-h1 = ParagraphStyle("h1", parent=body, fontName=BOLD, fontSize=14, leading=21, spaceBefore=10)
+h1 = ParagraphStyle("h1", parent=body, fontName=BOLD, fontSize=14, leading=21, spaceBefore=10,
+                    keepWithNext=1)
 title = ParagraphStyle("title", parent=body, fontName=BOLD, fontSize=14, alignment=TA_CENTER)
 center = ParagraphStyle("center", parent=body, alignment=TA_CENTER, fontSize=10, leading=15)
 cell = ParagraphStyle("cell", fontName=FONT, fontSize=10, leading=13)
@@ -47,22 +48,32 @@ def P(t, s=body):
     return Paragraph(t, s)
 
 
-def table(df, index=True):
+def table(df, index=True, fmt="{:.4f}", col_widths=None):
     d = df.reset_index() if index else df
     data = [[Paragraph(str(c), cellb) for c in d.columns]]
     for _, r in d.iterrows():
-        data.append([Paragraph(f"{v:.4f}" if isinstance(v, float) else str(v), cell) for v in r])
-    t = Table(data, hAlign="CENTER", repeatRows=1)
+        data.append([Paragraph(fmt.format(v) if isinstance(v, float) else str(v), cell) for v in r])
+    t = Table(data, hAlign="CENTER", repeatRows=1, colWidths=col_widths)
     t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.5, colors.black),
                            ("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
     return t
 
 
+FIG = [0]
+
+
 def img(path, caption, max_h=7.5 * inch):
+    """Image + auto-numbered caption (Figure 1, 2, 3 ... in order of appearance)."""
+    FIG[0] += 1
     w, h = PILImage.open(path).size
     s = min(MAX_W / w, max_h / h)
     im = Image(str(path), width=w * s, height=h * s)
-    return KeepTogether([im, P(caption, center)])
+    return KeepTogether([im, P(f"Figure {FIG[0]}. {caption}.", center)])
+
+
+def shot(name, caption, max_h=7.5 * inch):
+    f = SHOTS / name
+    return [img(f, caption, max_h)] if f.exists() else []
 
 
 def manual(task):
@@ -71,10 +82,10 @@ def manual(task):
         name = f.stem.lower()
         tagged = next((n for n in range(1, 5) if f"task{n}" in name), 4)
         if tagged == task and f.suffix.lower() in (".png", ".jpg", ".jpeg"):
-            nice = {"merge": "PR #23 merged into master and approved by reviewer",
+            nice = {"merge": "PR #23 merged into master and approved by the reviewer",
                     "commits": "Commits included in PR #23"}
             cap = next((v for k, v in nice.items() if k in name), f.stem.replace("_", " "))
-            out.append(img(f, f"Figure. {cap}."))
+            out.append(img(f, cap))
     return out
 
 
@@ -92,6 +103,7 @@ wm = comp.loc[win_name]
 mlp = comp.loc["MLP (64, 32)"]
 y = pd.read_csv(ROOT / "data" / "exam2_team3_ev_battery.csv")["battery_cell_temp_c"]
 p75, p90 = y.quantile(.75), y.quantile(.9)
+pv = presets.set_index("Scenario")["Predicted_C"]
 
 s = []
 s += [P("Examen Parcial 2, Part 2 - Team 3", title),
@@ -106,15 +118,17 @@ s += [P("Task 1: Regression and Residual Diagnostics", h1),
         "with random_state=42 and fit three models: a base OLS, an OLS on log(y) that we transform back with "
         "exp before computing metrics, and a degree 2 polynomial regression (20 generated features). "
         "Adjusted R2 uses n = 120 test rows and p = number of features each model really uses."),
-      table(t1), Spacer(1, 8),
-      img(FIGS / "task1_residual_dashboard.png", "Figure 1. Residual diagnostics of the base OLS model."),
-      P(f"<b>Team answer:</b> The base OLS wins with the lowest RMSE ({t1.loc['OLS Linear','RMSE']:.3f}) and the "
-        f"highest adjusted R2 ({t1.loc['OLS Linear','Adj_R2']:.3f}). The polynomial model is almost the same on "
-        f"R2 but its adjusted R2 drops because it uses 20 terms, and the log model is worse, so the relation is "
-        f"basically linear. The residual plots agree: the Residuals vs Fitted line is flat (linearity OK), the "
+      table(t1), Spacer(1, 8)]
+s += shot("terminal_task1.png", "Console output of scripts/task1_regression.py")
+s += [img(FIGS / "task1_residual_dashboard.png", "Residual diagnostics of the base OLS model"),
+      P(f"<b>Team answer:</b> The base OLS wins with the lowest RMSE ({t1.loc['OLS Linear', 'RMSE']:.3f}) and "
+        f"the highest adjusted R2 ({t1.loc['OLS Linear', 'Adj_R2']:.3f}). The polynomial model is almost the same "
+        f"on R2 but its adjusted R2 drops because it uses 20 terms, and the log model is worse, so the relation "
+        f"is basically linear. The residual plots agree: the Residuals vs Fitted line is flat (linearity OK), the "
         f"Q-Q plot follows the line except a few tail points (Shapiro-Wilk p = {float(diag['shapiro_p']):.3f}), "
         f"the Scale-Location line is flat (Breusch-Pagan p = {float(diag['breusch_pagan_p']):.3f}, so constant "
-        f"variance), and no point has a large Cook's distance (max = {float(diag['max_cooks']):.3f}, far below 0.5).")]
+        f"variance), and no point has a large Cook's distance (max = {float(diag['max_cooks']):.3f}, far below "
+        f"0.5).")]
 s += manual(1)
 
 # Task 2
@@ -123,9 +137,11 @@ s += [P("Task 2: Artificial Neural Network", h1),
         f"MLPRegressor with two hidden layers (64, 32), ReLU, early stopping and max_iter=1000. It stopped after "
         f"{meta['mlp']['n_iter']} epochs. Then we compared it with the three Task 1 models on the same test set "
         f"and saved the model with the lowest RMSE."),
-      table(comp), Spacer(1, 8),
-      img(FIGS / "task2_loss_curve.png", "Figure 2. MLP training loss per epoch.", max_h=4 * inch),
-      P(f"<b>Team answer:</b> The loss drops fast in the first epochs and then flattens, so the network "
+      table(comp), Spacer(1, 8)]
+s += shot("terminal_task2.png", "Console output of scripts/task2_ann.py")
+s += [img(FIGS / "task2_loss_curve.png", "MLP training loss per epoch", max_h=4 * inch)]
+s += shot("terminal_models.png", "Saved artifacts in the models/ folder", max_h=2.5 * inch)
+s += [P(f"<b>Team answer:</b> The loss drops fast in the first epochs and then flattens, so the network "
         f"converged and early stopping ended training before overfitting. Even so, the MLP (RMSE = "
         f"{mlp['RMSE']:.3f}) does not beat the {win_name} (RMSE = {wm['RMSE']:.3f}). Since the data is close "
         f"to linear, a simple linear model is enough and the ANN only adds complexity. The winning model "
@@ -134,26 +150,38 @@ s += [P("Task 2: Artificial Neural Network", h1),
 s += manual(2)
 
 # Task 3
-shots = [("tab1.png", "Tab 1 - Data Overview"), ("tab2.png", "Tab 2 - Model Comparison"),
-         ("tab3.png", "Tab 3 - ANN Training"), ("tab4.png", "Tab 4 - What-If (median values)"),
-         ("tab4_normal.png", "Tab 4 - Normal scenario preset"),
-         ("tab4_high_risk.png", "Tab 4 - High-risk scenario preset")]
-s += [P("Task 3: Streamlit App", h1),
-      P(f"We built app.py with four tabs that load the .joblib files with st.cache_resource and show an error "
-        f"if a file is missing. Tab 4 has sliders for the five features (dataset min/max, default at the "
-        f"median) and predicts the temperature with {win_name}. Active cooling is triggered at "
-        f"{round(p75)} C (75th percentile, {p75:.2f} C) and the critical alert at {round(p90)} C "
-        f"(90th percentile, {p90:.2f} C). We checked both presets with the real model:"),
-      table(presets[["Scenario", "discharge_rate_c", "ambient_temp_c", "coolant_flow_l_min",
-                     "internal_resistance_mOhm", "Predicted_C", "Alert"]], index=False), Spacer(1, 8)]
-for i, (f, c) in enumerate(shots, 3):
-    if (SHOTS / f).exists():
-        s.append(img(SHOTS / f, f"Figure {i}. {c}.", max_h=6.5 * inch))
-s += [P("<b>Team answer:</b> Discharge rate and ambient temperature push the cell temperature up the most, "
-        "and coolant flow pulls it down. With low discharge, cool ambient and high coolant the prediction "
-        "stays near 26 C (normal), but high discharge, hot ambient, low coolant and high resistance give about "
-        "71 C, which is above the critical threshold. Using percentiles keeps the alerts tied to what the "
-        "batteries actually experienced in the data.")]
+scen = presets.rename(columns={"discharge_rate_c": "Discharge", "ambient_temp_c": "Ambient",
+                               "coolant_flow_l_min": "Coolant", "internal_resistance_mOhm": "Resistance",
+                               "Predicted_C": "Pred. C"})
+scen["Scenario"] = scen["Scenario"].str.replace(" scenario", "", regex=False)
+scen["Alert"] = scen["Alert"].str.title()
+scen = scen[["Scenario", "Discharge", "Ambient", "Coolant", "Resistance", "Pred. C", "Alert"]]
+widths = [w * inch for w in (1.15, 0.8, 0.75, 0.75, 0.9, 0.7, 1.15)]
+s += [KeepTogether([P("Task 3: Streamlit App", h1)]
+                   + shot("terminal_streamlit.png", "Launching the app with streamlit run app.py",
+                          max_h=1.5 * inch))]
+s += [P(f"We built app.py with four tabs that load the .joblib files with st.cache_resource and show an error "
+        f"if a file is missing. A status line under the title shows which artifacts were loaded. Tab 4 has "
+        f"sliders for the five features (dataset min/max, default at the median) and predicts the temperature "
+        f"with {win_name}. Active cooling is triggered at {round(p75)} C (75th percentile, {p75:.2f} C) and the "
+        f"critical alert at {round(p90)} C (90th percentile, {p90:.2f} C). We checked the three presets with "
+        f"the real model:"),
+      table(scen, index=False, fmt="{:.2f}", col_widths=widths), Spacer(1, 8)]
+for f, c in [("tab1.png", "Tab 1 - Data Overview"), ("tab2.png", "Tab 2 - Model Comparison"),
+             ("tab3.png", "Tab 3 - ANN Training"),
+             ("tab4_normal.png", "Tab 4 - Normal scenario (success)"),
+             ("tab4_active_cooling.png", "Tab 4 - Active cooling scenario (warning)"),
+             ("tab4_high_risk.png", "Tab 4 - High-risk scenario (critical error)")]:
+    s += shot(f, c)
+s += [P(f"<b>Team answer:</b> Discharge rate and ambient temperature push the cell temperature up the most, "
+        f"and coolant flow pulls it down. With low discharge, cool ambient and high coolant the prediction "
+        f"stays near {pv['Normal scenario']:.0f} C (normal). With a high discharge, median ambient, low coolant "
+        f"and high resistance it goes to {pv['Active cooling scenario']:.2f} C, which is between {round(p75)} "
+        f"and {round(p90)} C, so active cooling turns on. High discharge, hot ambient, low coolant and high "
+        f"resistance give about {pv['High-risk scenario']:.0f} C, above the critical threshold. The green status "
+        f"line at the top confirms that the four .joblib/metadata files loaded correctly, and it is visible in "
+        f"all four tabs. Using percentiles keeps the alerts tied to what the batteries actually experienced in "
+        f"the data.")]
 s += manual(3)
 
 # Task 4
