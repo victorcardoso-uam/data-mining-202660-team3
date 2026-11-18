@@ -71,7 +71,10 @@ def manual(task):
         name = f.stem.lower()
         tagged = next((n for n in range(1, 5) if f"task{n}" in name), 4)
         if tagged == task and f.suffix.lower() in (".png", ".jpg", ".jpeg"):
-            out.append(img(f, f"Manual screenshot: {f.name}"))
+            nice = {"merge": "PR #23 merged into master and approved by reviewer",
+                    "commits": "Commits included in PR #23"}
+            cap = next((v for k, v in nice.items() if k in name), f.stem.replace("_", " "))
+            out.append(img(f, f"Figure. {cap}."))
     return out
 
 
@@ -158,8 +161,10 @@ s += [P("Task 4: Git and Pull Request", h1),
       P("We made small commits per task on the branch <b>exam/partial-exam-2</b>, pushed it and opened a "
         "Pull Request to master for code review by a teammate before merging."),
       P(f"<b>Branch:</b> exam/partial-exam-2<br/><b>Pull Request:</b> {pr_url}"),
-      P("<b>[Insert screenshot: PR review and merge]</b>"), Spacer(1, 60)]
-s += manual(4)
+      P(f"The PR was reviewed and approved by a teammate and merged into master. Merge commit: "
+        f"{(REPORTS / 'merge_commit.txt').read_text().strip() if (REPORTS / 'merge_commit.txt').exists() else '-'}.")]
+m4 = manual(4)
+s += m4 if m4 else [P("<b>[Insert screenshot: PR review and merge]</b>"), Spacer(1, 60)]
 
 SimpleDocTemplate(str(OUT), pagesize=LETTER, leftMargin=inch, rightMargin=inch,
                   topMargin=inch, bottomMargin=inch, title="Exam2 Team3 Report").build(s)
